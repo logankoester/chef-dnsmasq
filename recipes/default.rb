@@ -17,6 +17,15 @@ template '/etc/resolvconf.conf' do
   notifies :run, 'bash[resolvconf]', :immediate
 end
 
+template '/etc/resolv.conf.tail' do
+  source 'resolv.conf.tail.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  variables nameservers: node['dnsmasq']['nameservers']
+  notifies :run, 'bash[resolvconf]', :immediate
+end
+
 bash 'resolvconf' do
   user 'root'
   code 'resolvconf -u'
